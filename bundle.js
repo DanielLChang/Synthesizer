@@ -24057,16 +24057,61 @@
 	  function Synth(props) {
 	    _classCallCheck(this, Synth);
 	
-	    return _possibleConstructorReturn(this, (Synth.__proto__ || Object.getPrototypeOf(Synth)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Synth.__proto__ || Object.getPrototypeOf(Synth)).call(this, props));
+	
+	    _this.notes = _tones.NOTE_NAMES.map(function (note) {
+	      return new _note2.default(_tones.TONES[note]);
+	    });
+	    return _this;
 	  }
 	
 	  _createClass(Synth, [{
+	    key: 'onKeyDown',
+	    value: function onKeyDown(e) {
+	      this.props.keyReleased(e.key);
+	    }
+	  }, {
+	    key: 'onKeyUp',
+	    value: function onKeyUp(e) {
+	      this.props.keyPressed(e.key);
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      (0, _jquery2.default)(document).on('keydown', function (e) {
+	        return _this2.onKeyDown(e);
+	      });
+	      (0, _jquery2.default)(document).on('keyup', function (e) {
+	        return _this2.onKeyUp(e);
+	      });
+	    }
+	  }, {
+	    key: 'playNotes',
+	    value: function playNotes() {
+	      var _this3 = this;
+	
+	      _tones.NOTE_NAMES.forEach(function (note, idx) {
+	        if (_this3.props.notes.indexOf(note) !== -1) {
+	          _this3.notes[idx].start();
+	        } else _this3.notes[idx].stop();
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this4 = this;
+	
+	      this.playNotes();
+	      var noteKeys = _tones.NOTE_NAMES.map(function (note, idx) {
+	        return _react2.default.createElement(NoteKey, { key: idx, note: note, pressed: _this4.props.notes.includes(note) });
+	      });
+	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        'Synth'
+	        noteKeys
 	      );
 	    }
 	  }]);
