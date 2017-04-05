@@ -2,6 +2,8 @@ import React from 'react';
 import { NOTE_NAMES, TONES } from '../../util/tones';
 import Note from '../../util/note';
 
+import Notekey from './note_key';
+
 class Synth extends React.Component {
   constructor(props) {
     super(props);
@@ -36,7 +38,7 @@ class Synth extends React.Component {
   render() {
     this.playNotes();
     const noteKeys = NOTE_NAMES.map((note, idx) => (
-      <li key={idx}>{note}</li>
+      <Notekey key={idx} note={note} pressed={this.props.notes.includes(note)}/>
     ));
 
     return (
