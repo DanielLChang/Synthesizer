@@ -22630,7 +22630,7 @@
 	
 	  switch (action.type) {
 	    case _notes_actions.KEY_PRESSED:
-	      if (validNote && idx !== -1) {
+	      if (validNote && idx === -1) {
 	        return [].concat(_toConsumableArray(state), [action.key]);
 	      }
 	      return state;
@@ -24075,7 +24075,7 @@
 	    keyPressed: function keyPressed(key) {
 	      return dispatch((0, _notes_actions.keyPressed)(key));
 	    },
-	    keyRelesed: function keyRelesed(key) {
+	    keyReleased: function keyReleased(key) {
 	      return dispatch((0, _notes_actions.keyReleased)(key));
 	    }
 	  };
@@ -24099,6 +24099,12 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _tones = __webpack_require__(203);
+	
+	var _note = __webpack_require__(204);
+	
+	var _note2 = _interopRequireDefault(_note);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24113,16 +24119,70 @@
 	  function Synth(props) {
 	    _classCallCheck(this, Synth);
 	
-	    return _possibleConstructorReturn(this, (Synth.__proto__ || Object.getPrototypeOf(Synth)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Synth.__proto__ || Object.getPrototypeOf(Synth)).call(this, props));
+	
+	    _this.notes = _tones.NOTE_NAMES.map(function (note) {
+	      return new _note2.default(_tones.TONES[note]);
+	    });
+	    return _this;
 	  }
 	
 	  _createClass(Synth, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      document.addEventListener('keydown', function (e) {
+	        return _this2.onKeyDown(e);
+	      });
+	      document.addEventListener('keyup', function (e) {
+	        return _this2.onKeyUp(e);
+	      });
+	    }
+	  }, {
+	    key: 'onKeyDown',
+	    value: function onKeyDown(e) {
+	      this.props.keyPressed(e.key);
+	    }
+	  }, {
+	    key: 'onKeyUp',
+	    value: function onKeyUp(e) {
+	      this.props.keyReleased(e.key);
+	    }
+	  }, {
+	    key: 'playNotes',
+	    value: function playNotes() {
+	      for (var i = 0; i < _tones.NOTE_NAMES.length; i++) {
+	        var note = _tones.NOTE_NAMES[i];
+	
+	        if (this.props.notes.indexOf(note) !== -1) {
+	          this.notes[i].start();
+	        } else {
+	          this.notes[i].stop();
+	        }
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      this.playNotes();
+	      var noteKeys = _tones.NOTE_NAMES.map(function (note, idx) {
+	        return _react2.default.createElement(
+	          'li',
+	          { key: idx },
+	          note
+	        );
+	      });
+	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        'Synth'
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'Synth'
+	        ),
+	        noteKeys
 	      );
 	    }
 	  }]);

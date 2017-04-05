@@ -14,7 +14,7 @@ const notesReducer = (state = [], action) => {
 
   switch (action.type) {
     case KEY_PRESSED:
-      if (validNote && idx !== -1) {
+      if (validNote && idx === -1) {
         return [...state, action.key];
       }
       return state;
